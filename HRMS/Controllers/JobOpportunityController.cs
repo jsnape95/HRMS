@@ -105,8 +105,6 @@ namespace HRMS.Controllers
             var applicantLink = db.VacancyApplicantLinks.FirstOrDefault(x => x.ApplicantId == applicantId && x.VacancyId == vacancyId);
             applicantLink.ApplicantStatus = Status.Accepted;
 
-            db.SaveChanges();
-
             var applicant = db.Applicants.FirstOrDefault(x => x.ApplicantId == applicantId);
 
             var newEmployee = new Employee
@@ -115,13 +113,16 @@ namespace HRMS.Controllers
                 Title = applicant.Title,
                 FirstName = applicant.FirstName,
                 LastName = applicant.LastName,
-                //DepartmentId
                 //IsManager
                 JobId = applicantLink.Vacancy.JobId,
                 //LineManagerId
                 ProfileImageUrl = "",
                 Salary = applicantLink.Vacancy.Salary
             };
+
+            db.Employees.Add(newEmployee);
+
+            db.SaveChanges();
 
             return RedirectToAction("");
         }
