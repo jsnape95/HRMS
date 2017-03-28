@@ -13,6 +13,11 @@ namespace HRMS.Models
 
         public string JobSpecification { get; set; }
 
+        [Required]
+        public int DepartmentId { get; set; }
+
+        public virtual Department Department { get; set; }
+
         public virtual List<Employee> Employees { get; set; }
 
         public virtual List<Vacancy> Vacancy { get; set; }

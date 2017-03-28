@@ -31,9 +31,6 @@ namespace HRMS.Models
         public int? LineManagerId { get; set; }
 
         [Required]
-        public int DepartmentId { get; set; }
-
-        [Required]
         public int JobId { get; set; }
 
         public string ProfileImageUrl { get; set; }
@@ -41,8 +38,6 @@ namespace HRMS.Models
         [Required]
         public decimal Salary { get; set; }
 
-        
-        public virtual Department Department { get; set; }
 
         public virtual Job Job { get; set; }
 

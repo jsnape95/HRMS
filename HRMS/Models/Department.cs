@@ -11,6 +11,6 @@ namespace HRMS.Models
 
         public string Name { get; set; }
 
-        public virtual List<Employee> Employees { get; set; }
+        public virtual List<Job> Jobs { get; set; }
     }
 }

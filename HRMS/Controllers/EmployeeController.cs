@@ -96,10 +96,11 @@ namespace HRMS.Controllers
         
         public JsonResult GetDepartmentJobs(int departmentId)
         {
-            var allJobs = db.Jobs.OrderBy(x => x.JobTitle).ToList();
-            var topJobs = db.Jobs.Where(x => x.Employees.Select(y => y.DepartmentId == departmentId).FirstOrDefault()).OrderBy(x => x.JobTitle).ToList();
-            var otherJobs = allJobs.Except(topJobs).ToList();
-            allJobs = topJobs.Concat(otherJobs).ToList();
+            //var allJobs = db.Jobs.OrderBy(x => x.JobTitle).ToList();
+            //var topJobs = db.Jobs.Where(x => x.Employees.Select(y => y.DepartmentId == departmentId).FirstOrDefault()).OrderBy(x => x.JobTitle).ToList();
+            //var otherJobs = allJobs.Except(topJobs).ToList();
+            //allJobs = topJobs.Concat(otherJobs).ToList();
+            var allJobs = db.Jobs.Where(x => x.DepartmentId == departmentId).OrderBy(x => x.JobTitle).ToList();
 
             var json = allJobs.Select(x => new Job { JobId = x.JobId, JobTitle = x.JobTitle });
 
