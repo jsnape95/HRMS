@@ -1,0 +1,66 @@
+﻿@model HRMS.Models.Applicant
+
+<script>
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+</script>
+
+@using (Html.BeginForm("AddApplicant", "JobOpportunity", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(x => x.FirstName, "First Name", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(x => x.FirstName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.LastName, "Last Name", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(x => x.LastName)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Email, "Email", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                @Html.TextBoxFor(x => x.Email, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(x => x.Email)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.DateOfBirth, "D.O.B", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.TextBoxFor(x => x.DateOfBirth, new { @class = "form-control pull-right datepicker", required = "required" })
+                </div>
+                @Html.ValidationMessageFor(x => x.DateOfBirth)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.ResumeURL, "CV", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                <input type="file" name="cvUpload" accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required="required"/>
+            </div>
+        </div>
+
+        @Html.Hidden("vacancyId", (int)ViewBag.vacancyId)
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left" id="submitAddEmp">Save</button>
+            </div>
+        </div>
+
+    </div>
+}

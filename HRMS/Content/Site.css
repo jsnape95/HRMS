@@ -1,0 +1,91 @@
+﻿#login-box {
+    float: none;
+    margin: auto;
+    margin-top: 175px;
+    background-color: #e6e6e6;
+    text-align:center;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+#login-body {
+
+    background-color: #455a64;
+
+}
+
+#register-box {
+    float: none;
+    margin: auto;
+    margin-top: 150px;
+    background-color: #e6e6e6;
+    text-align:center;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.mouse-hover {
+    cursor: pointer;
+}
+
+.profile-picture {
+    margin: 0 auto;
+    width: 100px;
+    padding: 3px;
+    border: 3px solid #d2d6de;
+}
+
+.profile-username {
+    font-size: 21px;
+    margin-top: 5px;
+}
+
+.modalLarge > .modal-dialog {
+    width:75% !important;
+}
+
+.modalMedium > .modal-dialog {
+    width:50% !important;
+}
+
+.boldText {
+    font-weight: bold !important;
+}
+
+.a-normal-text{
+    color: #000000 !important;
+}
+
+.box-hover:hover {
+    opacity: 0.5;
+}
+
+.margin-10-left {
+    margin-left: 10px;
+}
+.error{
+    color:red;
+}
+
+.box-blank {
+    height: 153px;
+    background-color: #f1f1f1;
+    line-height: 138px;
+    text-align: center;
+}
+
+.box-blank-text{
+    color: #a6a6a6;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}
+
+.underline-div{
+    border-bottom: 1px solid #d2d6de;
+}
+
+.dropdown-menu-details {
+    left:auto;
+    margin-top: -39px !important;
+}

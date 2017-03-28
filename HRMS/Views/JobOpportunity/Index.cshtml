@@ -1,0 +1,80 @@
+﻿@model List<HRMS.Models.Vacancy>
+
+@{
+    ViewBag.Title = "Job Board";
+}
+
+@using (Html.BeginForm("", ""))
+{
+    for (var x = 0; x < Model.Count; x++)
+    {
+         
+        var boxColour = "";
+        if(Model[x].OpenDate > DateTime.Now)
+        {
+            boxColour = "box-warning";
+        }
+        else
+        {
+            boxColour = "box-success";
+        }
+        
+        if (x % 3 == 0)
+        {
+            if (x != 0)
+            {
+                @Html.Raw("</div>");
+            }
+
+            @Html.Raw("<div class='row'>");
+        }
+
+        <div class="col-md-4">
+            <a href='@Url.Action("VacancyDetails", "JobOpportunity", new { vacancyId = Model[x].VacancyId })' class="a-normal-text">
+                <div class="box box-solid box-hover @boxColour">
+                    <div class="box-header">
+                        <h3 class="box-title">@Model[x].Job.JobTitle</h3>
+                    </div>
+                    <div class="box-body">
+                        <p><span class="boldText">Total Job Openings: </span>@Model[x].AmountOfOpenings</p>
+                        <p><span class="boldText">Positions Filled: </span>@Model[x].PosistionsFilled</p>
+                        <p><span class="boldText">Current Offers: </span>@Model[x].PositionsOffered</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+
+    <div class="col-md-4">
+        <a href="#" class="a-normal-text">
+            <div class="box box-blank box-hover">
+                <span class="box-blank-text">
+                    <i class="fa fa-plus fa-4x"></i>
+                </span>
+            </div>
+        </a>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.box-blank').on('click', function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/JobOpportunity/AddVacancy",
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Add Vacancy",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

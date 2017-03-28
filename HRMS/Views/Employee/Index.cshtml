@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Employees";
+}
+
+@using (Ajax.BeginForm("EmployeeResults", "Employee", new AjaxOptions { UpdateTargetId = "employeeResults" }, new { id = "employeeSearch" }))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="well">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default" id="addEmployee"><i class="fa fa-plus"></i></button>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search for an employee..." name="searchString">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary" id="submitForm">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div id="employeeResults"></div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('#submitForm').on('click', function () {
+                $('#employeeSearch').submit();
+            });
+
+            $('#addEmployee').on('click', function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/Employee/AddEmployee",
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Add Employee",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+
+            });
+
+            
+
+        });
+
+        function employeeDetails(id) {
+            window.location.href = "/Employee/EmployeeDetails/" + id;
+        }
+</script>    
+}

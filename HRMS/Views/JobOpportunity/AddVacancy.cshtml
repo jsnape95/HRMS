@@ -1,0 +1,63 @@
+﻿@model HRMS.Models.Vacancy
+
+<script>
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+
+    //$(".js-example-basic-single").select2();
+</script>
+
+@using (Html.BeginForm("AddVacancy", "JobOpportunity", FormMethod.Post, new { id = "addVacancyForm" }))
+{
+    <div class="form-horizontal">
+        @Html.AntiForgeryToken()
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.JobId, "Position", new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(x => x.JobId, (SelectList)ViewBag.Jobs, new { @class = "form-control"})
+            </div>
+
+            @Html.LabelFor(x => x.AmountOfOpenings, "Openings", new { @class = "col-md-2 control-label" })
+            <div class="col-md-3">
+                @Html.TextBoxFor(x => x.AmountOfOpenings, new { @class = "form-control", required = "required", type = "number" })
+                @Html.ValidationMessageFor(x => x.AmountOfOpenings)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.OpenDate, "Open Date", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.TextBoxFor(x => x.OpenDate, new { @class = "form-control pull-right datepicker", required = "required" })
+                </div>
+                @Html.ValidationMessageFor(x => x.OpenDate)
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.CloseDate, "Close Date", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.TextBoxFor(x => x.CloseDate, new { @class = "form-control pull-right datepicker", required = "required" })
+                </div>
+                @Html.ValidationMessageFor(x => x.CloseDate)
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left">Save</button>
+            </div>
+        </div>
+    </div>
+}

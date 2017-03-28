@@ -1,0 +1,38 @@
+﻿@model HRMS.Models.Employee
+
+@{
+    ViewBag.Title = Model.FirstName + " " + Model.LastName;
+}
+
+@using (Html.BeginForm("", ""))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <img class="profile-picture img-responsive img-circle" alt="@Model.FirstName @Model.LastName profile image" title="@Model.FirstName @Model.LastName" src="@Model.ProfileImageUrl" />
+                    <h3 class="profile-username text-center">@Model.FirstName @Model.LastName</h3>
+                    <p class="text-muted text-center">@Model.Job.JobTitle</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">Overview</a></li>
+                    <li class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Documents</a></li>
+                    <li class=""><a href="#history" data-toggle="tab" aria-expanded="false">History</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="overview">
+                    </div>
+                    <div class="tab-pane" id="documents">
+                    </div>
+                    <div class="tab-pane" id="history">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+}
