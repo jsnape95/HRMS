@@ -37,6 +37,9 @@ namespace HRMS.Models
 
         [Required]
         public decimal Salary { get; set; }
+        
+        [Required]
+        public int HolidayEntitlement { get; set; }
 
 
         public virtual Job Job { get; set; }
@@ -45,5 +48,7 @@ namespace HRMS.Models
         public virtual Employee LineManager { get; set; }
 
         public virtual List<EmployeeHolidayLink> EmployeeHolidayLinks { get; set; }
+
+        public virtual List<EmployeeDocument> EmployeeDocuments { get; set; }
     }
 }

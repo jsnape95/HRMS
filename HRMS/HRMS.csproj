@@ -209,6 +209,7 @@
     <Compile Include="Models\Applicant.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\EmployeeDocument.cs" />
     <Compile Include="Models\EmployeeHolidayLink.cs" />
     <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\IdentityModels.cs" />

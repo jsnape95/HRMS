@@ -48,6 +48,7 @@ namespace HRMS.Models
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
         public DbSet<EmployeeHolidayLink> EmployeeHolidayLinks { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Job> Jobs { get; set; }

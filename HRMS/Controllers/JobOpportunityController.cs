@@ -113,7 +113,7 @@ namespace HRMS.Controllers
                 Title = applicant.Title,
                 FirstName = applicant.FirstName,
                 LastName = applicant.LastName,
-                //IsManager
+                IsManager = false, //NEED TO CHANGE THIS - JS
                 JobId = applicantLink.Vacancy.JobId,
                 //LineManagerId
                 ProfileImageUrl = "",
@@ -124,7 +124,7 @@ namespace HRMS.Controllers
 
             db.SaveChanges();
 
-            return RedirectToAction("");
+            return RedirectToAction("VacancyDetails", new { vacancyId = vacancyId} );
         }
 
         [HttpPost]
