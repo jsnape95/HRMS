@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HRMS.Models
@@ -14,3 +13,10 @@ namespace HRMS.Models
         public virtual List<Job> Jobs { get; set; }
     }
 }
+
+
+
+
+
+
+

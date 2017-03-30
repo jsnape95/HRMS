@@ -117,7 +117,7 @@ namespace HRMS.Controllers
                 JobId = applicantLink.Vacancy.JobId,
                 //LineManagerId
                 ProfileImageUrl = "",
-                Salary = applicantLink.Vacancy.Salary
+                //MinSalary = applicantLink.Vacancy.MinSalary
             };
 
             db.Employees.Add(newEmployee);

@@ -8,8 +8,10 @@ namespace HRMS.Models
         [Key]
         public int VacancyId { get; set; }
 
+        [Required]
         public DateTime OpenDate { get; set; }
 
+        [Required]
         public DateTime CloseDate { get; set; }
 
         public int AmountOfOpenings { get; set; }
@@ -20,7 +22,9 @@ namespace HRMS.Models
 
         public int PositionsRejected { get; set; }
 
-        public decimal Salary { get; set; }
+        public decimal? MinSalary { get; set; }
+
+        public decimal? MaxSalary { get; set; }
 
         public int JobId { get; set; }
 
