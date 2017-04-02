@@ -8,6 +8,7 @@ namespace HRMS.Models
         [Key]
         public int JobId { get; set; }
 
+        [Required]
         public string JobTitle { get; set; }
 
         public string JobSpecification { get; set; }

@@ -8,15 +8,9 @@ namespace HRMS.Models
         [Key]
         public int DepartmentId { get; set; }
 
+        [Required]
         public string Name { get; set; }
 
         public virtual List<Job> Jobs { get; set; }
     }
 }
-
-
-
-
-
-
-
