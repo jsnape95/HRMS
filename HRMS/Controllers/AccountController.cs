@@ -86,7 +86,7 @@ namespace HRMS.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "The email and/or password you have entered is invalid, please try again.");
                     return View(model);
             }
         }

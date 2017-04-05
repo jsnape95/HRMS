@@ -82,10 +82,17 @@ namespace HRMS.Controllers
             string userName = employee.FirstName.ToLower() + "_" + employee.LastName.ToLower();
             string newFileName = userName + "_" + guid + Path.GetExtension(profileImage.FileName);
 
-            var path = Path.Combine(Server.MapPath("~/Images/Employees/"), userName);
+            var x = Server.MapPath(profileImage.FileName);
+             
+            //save locally
+            var path = Path.Combine(Server.MapPath("~/Images/Employees/"), newFileName);
             profileImage.SaveAs(path);
 
-            employee.ProfileImageUrl = path;
+            //save to cloud
+            var cloud = new Helpers.CloudStroage();
+            var url = cloud.UploadImage(path, newFileName);
+
+            employee.ProfileImageUrl = url;
             employee.JobId = jobId;
             db.Employees.Add(employee);
             db.SaveChanges();
@@ -96,15 +103,13 @@ namespace HRMS.Controllers
         
         public JsonResult GetDepartmentJobs(int departmentId)
         {
-            //var allJobs = db.Jobs.OrderBy(x => x.JobTitle).ToList();
-            //var topJobs = db.Jobs.Where(x => x.Employees.Select(y => y.DepartmentId == departmentId).FirstOrDefault()).OrderBy(x => x.JobTitle).ToList();
-            //var otherJobs = allJobs.Except(topJobs).ToList();
-            //allJobs = topJobs.Concat(otherJobs).ToList();
+            //database call to pull all the jobs for the chose department
             var allJobs = db.Jobs.Where(x => x.DepartmentId == departmentId).OrderBy(x => x.JobTitle).ToList();
 
-            var json = allJobs.Select(x => new Job { JobId = x.JobId, JobTitle = x.JobTitle });
+            //converts to an object that can be used with json
+            var jsonJobs = allJobs.Select(x => new Job { JobId = x.JobId, JobTitle = x.JobTitle });
 
-            return Json(json, JsonRequestBehavior.AllowGet);
+            return Json(jsonJobs, JsonRequestBehavior.AllowGet);
         }
     }
 }
