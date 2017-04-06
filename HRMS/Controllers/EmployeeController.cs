@@ -9,11 +9,11 @@ using System.IO;
 
 namespace HRMS.Controllers
 {
-    [Authorize]
+    [Authorize (Roles = "Admin")]
     public class EmployeeController : Controller
     {
 
-        HRMS.Models.ApplicationDbContext db = new Models.ApplicationDbContext();
+        ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Employee
         public ActionResult Index()

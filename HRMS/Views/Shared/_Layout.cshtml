@@ -32,23 +32,27 @@
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="@Url.Action("Index", "Employee")">
-                            <i class="fa fa-users"></i> <span>Employees</span>
-                        </a>
-                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Employee")">
+                                <i class="fa fa-users"></i> <span>Employees</span>
+                            </a>
+                        </li>
 
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-briefcase"></i>
-                            <span>Job Opportunities</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="@Url.Action("Index", "JobOpportunity")"><i class="fa fa-building"></i> Vacancies</a></li>
-                            <li><a href="@Url.Action("ViewApplicants", "JobOpportunity")"><i class="fa fa-user-plus"></i> Applicants</a></li>
-                        </ul>
-                    </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-briefcase"></i>
+                                <span>Job Opportunities</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="@Url.Action("Index", "JobOpportunity")"><i class="fa fa-building"></i> Vacancies</a></li>
+                                <li><a href="@Url.Action("ViewApplicants", "JobOpportunity")"><i class="fa fa-user-plus"></i> Applicants</a></li>
+                            </ul>
+                        </li>
+                    }
+                    
 
                     <li class="treeview">
                         <a href="#">
@@ -61,6 +65,15 @@
                             <li><a href="@Url.Action("ViewCalendar", "Holiday")"><i class="fa fa-calendar"></i> View Calander</a></li>
                         </ul>
                     </li>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a href="@Url.Action("Index", "Home")">
+                                <i class="fa fa-cog"></i> <span>Settings</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </section>
             <!-- /.sidebar -->

@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace HRMS.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class JobOpportunityController : Controller
     {
         HRMS.Models.ApplicationDbContext db = new Models.ApplicationDbContext();
