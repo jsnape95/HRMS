@@ -1,5 +1,29 @@
 ﻿@model HRMS.Models.Applicant
 
+@{
+    var titles = new List<SelectListItem>();
+    titles.Add(new SelectListItem
+    {
+        Text = "Mr",
+        Value = "Mr"
+    });
+    titles.Add(new SelectListItem
+    {
+        Text = "Mrs",
+        Value = "Mrs"
+    });
+    titles.Add(new SelectListItem
+    {
+        Text = "Miss",
+        Value = "Miss"
+    });
+    titles.Add(new SelectListItem
+    {
+        Text = "Ms",
+        Value = "Ms"
+    });
+}
+
 <script>
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy'
@@ -9,6 +33,14 @@
 @using (Html.BeginForm("AddApplicant", "JobOpportunity", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.Title, new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(x => x.Title, titles, new { @class = "form-control" })
+            </div>
+        </div>  
+
         <div class="form-group">
             @Html.LabelFor(x => x.FirstName, "First Name", new { @class = "col-md-2 control-label" })
             <div class="col-md-9">

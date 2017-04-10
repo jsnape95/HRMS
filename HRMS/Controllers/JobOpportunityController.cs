@@ -45,24 +45,29 @@ namespace HRMS.Controllers
         public PartialViewResult AddVacancy()
         {
             //get all jobs and convert to dropdown
-            var jobs = new SelectList(
-                    db.Jobs.OrderBy(x => x.JobTitle),
-                    "JobId",
-                    "JobTitle"
+            var departments = new SelectList(
+                    db.Departments.OrderBy(x => x.Name),
+                    "DepartmentId",
+                    "Name"
                 );
 
             //send lists to view via the viewbag
-            ViewBag.Jobs = jobs;
+            ViewBag.Departments = departments;
 
             return PartialView();
         }
 
         [HttpPost]
-        public ActionResult AddVacancy(Vacancy vacancy)
+        public ActionResult AddVacancy(Vacancy vacancy, int jobId)
         {
+            //add the jobId into the data model
+            vacancy.JobId = jobId;
+
+            //add the vacancy to the db and saves
             db.Vacancies.Add(vacancy);
             db.SaveChanges();
 
+            //redirect to index view
             return RedirectToAction("Index");
         }
 
@@ -96,11 +101,31 @@ namespace HRMS.Controllers
             db.VacancyApplicantLinks.Add(vacancyApplicantLink);
             db.SaveChanges();
 
-            return RedirectToAction("");
+            return RedirectToAction("VacancyDetails", new { vacancyId = vacancyId });
+        }
+
+        [HttpGet]
+        public PartialViewResult AcceptApplicant(int vacancyId, int applicantId)
+        {
+
+            var lineManagers = new SelectList(
+                db.Employees.Where(x => x.IsManager).OrderBy(x => x.FirstName).Select(x => new
+                {
+                    ManagerId = x.EmployeeId,
+                    Name = x.FirstName + " " + x.LastName
+                }
+            ).ToList(), "ManagerId", "Name");
+
+            //send lists to view via the viewbag
+            ViewBag.LineManagers = lineManagers;
+            ViewBag.VacancyId = vacancyId;
+            ViewBag.ApplicantId = applicantId;
+
+            return PartialView();
         }
 
         [HttpPost]
-        public ActionResult AcceptApplicant(int vacancyId, int applicantId)
+        public ActionResult AcceptApplicant(Employee employee, int vacancyId, int applicantId)
         {
             var applicantLink = db.VacancyApplicantLinks.FirstOrDefault(x => x.ApplicantId == applicantId && x.VacancyId == vacancyId);
             applicantLink.ApplicantStatus = Status.Accepted;
@@ -113,11 +138,18 @@ namespace HRMS.Controllers
                 Title = applicant.Title,
                 FirstName = applicant.FirstName,
                 LastName = applicant.LastName,
-                IsManager = false, //NEED TO CHANGE THIS - JS
+                EmailAddress = applicant.Email,
+                IsManager = employee.IsManager,
                 JobId = applicantLink.Vacancy.JobId,
-                //LineManagerId
+                LineManagerId = employee.LineManagerId,
                 ProfileImageUrl = "",
-                //MinSalary = applicantLink.Vacancy.MinSalary
+                Salary = employee.Salary,
+                StartDate = employee.StartDate,
+                //WORK OUT HOLIDAY ENTITLEMENT - JS
+                HolidayEntitlement = 28
+
+
+
             };
 
             db.Employees.Add(newEmployee);

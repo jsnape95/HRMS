@@ -161,35 +161,23 @@
                 var vacancyId = @Model.VacancyId ;
                 var applicantId = $(this).closest('tr').data('id');
 
-                bootbox.confirm({
-                    message: "Are you sure you wish to accept " + name + "?",
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-success'
-                        },
-                        cancel: {
-                            label: 'No',
-                            className: 'btn-danger'
-                        }
-                    },
-                    callback: function (result) {
-                        if (result) {
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    vacancyId: vacancyId,
-                                    applicantId: applicantId
-                                },
-                                url: "/JobOpportunity/AcceptApplicant",
-                                beforeSend: function () {
 
-                                },
-                                success: function (data) {
-                                    location.reload();
-                                }
-                            });
-                        }
+                $.ajax({
+                    type: "GET",
+                    data: {
+                        vacancyId: vacancyId,
+                        applicantId: applicantId
+                    },
+                    url: "/JobOpportunity/AcceptApplicant",
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Are you sure you wish to accept " + name + "? If so please complete the information below.",
+                            message: data,
+                            className: "modalMedium"
+                        });
                     }
                 });
             });

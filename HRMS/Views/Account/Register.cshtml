@@ -17,8 +17,8 @@
 
 </head>
 <body id="login-body">
-
-    <div class="row">
+    <section class="content-login">
+        <div class="row">
             <div class="col-md-3" id="register-box">
                 <section id="loginForm">
                     @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -63,8 +63,10 @@
                     }
                 </section>
             </div>
-        
-    </div>
+
+        </div>
+    </section>
+    
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")

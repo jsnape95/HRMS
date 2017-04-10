@@ -18,6 +18,8 @@ namespace HRMS.Models
         [Required]
         public string LastName { get; set; }
 
+        public string EmailAddress { get; set; }
+
         [Required]
         public DateTime DateOfBirth { get; set; }
 

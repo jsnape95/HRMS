@@ -23,6 +23,9 @@ namespace HRMS.Models
         public string BillingPostcode { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime LastLogin { get; set; }
+        public int? EmployeeId { get; set; }
+
+        public virtual Employee Employee { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
