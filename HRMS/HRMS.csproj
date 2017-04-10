@@ -1029,6 +1029,7 @@
     <Content Include="Views\JobOpportunity\VacancyDetails.cshtml" />
     <Content Include="Views\JobOpportunity\AddVacancy.cshtml" />
     <Content Include="Views\JobOpportunity\AddApplicant.cshtml" />
+    <Content Include="Views\JobOpportunity\AcceptApplicant.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

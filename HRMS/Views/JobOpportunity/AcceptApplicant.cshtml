@@ -1,0 +1,67 @@
+﻿@model HRMS.Models.Employee
+
+
+<script>
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+
+</script>
+
+@using (Html.BeginForm("AcceptApplicant", "JobOpportunity", FormMethod.Post))
+{
+
+    <div class="form-horizontal">
+
+        <div class="form-group">
+
+
+            @Html.LabelFor(x => x.Salary, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-gbp"></i>
+                    </div>
+                    @Html.TextBoxFor(x => x.Salary, new { @class = "form-control", required = "required", type = "number" })
+                </div>
+                @Html.ValidationMessageFor(x => x.Salary)
+            </div>
+
+            @Html.LabelFor(x => x.StartDate, "Start Date", new { @class = "col-md-1 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date">
+                    <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </div>
+                    @Html.TextBoxFor(x => x.StartDate, new { @class = "form-control pull-right datepicker", required = "required" })
+                </div>
+                @Html.ValidationMessageFor(x => x.StartDate)
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            @Html.LabelFor(x => x.LineManagerId, "Line Manager", new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.DropDownListFor(x => x.LineManagerId, (SelectList)ViewBag.LineManagers, "N/A", new { @class = "form-control", id = "lineManagerList" })
+            </div>
+
+            @Html.LabelFor(x => x.IsManager, "Manager?", new { @class = "col-md-1 control-label" })
+            <div class="col-md-4">
+                @Html.CheckBoxFor(x => x.IsManager, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left" id="submitAddEmp">Accept</button>
+            </div>
+        </div>
+
+        @Html.Hidden("vacancyId", (int)ViewBag.VacancyId)
+        @Html.Hidden("applicantId", (int)ViewBag.ApplicantId)
+
+    </div>
+
+}

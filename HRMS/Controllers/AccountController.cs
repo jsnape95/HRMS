@@ -19,6 +19,8 @@ namespace HRMS.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        ApplicationDbContext db = new ApplicationDbContext();
+
         public AccountController()
         {
         }
@@ -158,6 +160,12 @@ namespace HRMS.Controllers
                 user.DateCreated = DateTime.Now;
                 user.LastLogin = DateTime.Now;
 
+                var employee = db.Employees.FirstOrDefault(x => x.EmailAddress == model.Email);
+                if (employee != null)
+                {
+                    user.EmployeeId = employee.EmployeeId;
+                }
+
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -169,8 +177,13 @@ namespace HRMS.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    var email = new EmailDistribution();
-                    email.SendEmail(model.Email, "Welcome!");
+                    await UserManager.AddToRoleAsync(user.Id, "Standard");
+
+                    if(!HttpContext.IsDebuggingEnabled)
+                    {
+                        var email = new EmailDistribution();
+                        email.SendEmail(model.Email, "Welcome!");
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }
