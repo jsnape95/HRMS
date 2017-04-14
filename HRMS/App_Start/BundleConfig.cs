@@ -42,6 +42,11 @@ namespace HRMS
                       "~/Scripts/respond.js"
                       ));
 
+           
+
+
+            /////////////////////////////////SCRIPTS START///////////////////////////////////
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
     "~/Content/AdminLTE/css/font-awesome.min.css",

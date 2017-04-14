@@ -1,0 +1,60 @@
+﻿@model HRMS.Models.Holiday
+
+@using (Html.BeginForm("RequestHoliday", "Holiday", FormMethod.Post))
+{
+
+    <div class="form-horizontal">
+
+        @if (Model.StartDate == Model.EndDate)
+        {
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-1">
+                    <table class="table table-bordered table-responsive">
+                        <tr>
+                            <th width="40%">Requested Date:</th>
+                            <td>@Model.StartDate.ToLongDateString()</td>
+                        </tr>
+                        <tr>
+                            <th>Select Time:</th>
+                            <td>
+                                Full Day @Html.RadioButton("time", 1, true) <br />
+                                Morning Only @Html.RadioButton("time", 2, false) <br />
+                                Afternoon Only @Html.RadioButton("time", 3, false)
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-1">
+                    <table class="table table-bordered table-responsive">
+                        <tr>
+                            <th width="40%">Requested Start Date:</th>
+                            <td>@Model.StartDate.ToLongDateString() @Model.StartDate.ToLongTimeString()</td>
+                        </tr>
+                        <tr>
+                            <th>Requested End Date:</th>
+                            <td>@Model.EndDate.ToLongDateString() @Model.EndDate.ToLongTimeString()</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        }
+
+        
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left">Submit</button>
+            </div>
+        </div>
+
+        @Html.HiddenFor(x => x.StartDate)
+        @Html.HiddenFor(x => x.EndDate)
+
+    </div>
+}

@@ -2,3 +2,57 @@
 @{
     ViewBag.Title = "ViewCalendar";
 }
+
+@using (Html.BeginForm("", ""))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div id="holiday-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+
+            $('#holiday-calendar').fullCalendar({
+                //weekends: false,
+                dayClick: function (i) {
+                    alert(i);
+                },
+                header: {
+                    left: '',
+                    center: 'title',
+                    right: 'today prev,next'
+                },
+                editable: true,
+                async: false,
+                events: {
+                    url: '@Url.Action("GetUsersHolidays", "Holiday")',
+                    type: 'GET',
+                    data: {
+                        employeeId
+                    },
+                    error: function () {
+                        alert('there was an error while fetching events!');
+                    },
+                    color: 'yellow',
+                    textColor: 'black'
+                }
+            });
+
+
+
+
+        });
+    </script>
+
+}

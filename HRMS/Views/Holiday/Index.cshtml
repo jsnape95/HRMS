@@ -1,5 +1,96 @@
-﻿
+﻿@model HRMS.Models.ApplicationUser
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My Holidays";
 }
 
+<div class="row">
+    @if (Model.Employee == null)
+    {
+        <div class="col-md-12">
+            <p class="error">You are not currently logged as an employee on this system, please refer to HR.</p>
+        </div>
+    }
+    else
+    {
+
+        <div class="col-md-3">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div class="box-title"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="box box-primary">
+                <div class="box-body">
+                    <div id="holiday-calendar"></div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+@section scripts {
+  
+    <script>
+        $(document).ready(function () {
+
+
+            $('#holiday-calendar').fullCalendar({
+                weekends: false,
+                selectable: true,
+                showNonCurrentDates: false,
+                select: function (start, end) {
+
+                    startDate = formatDate(start);
+                    endDate = formatDate(end);
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/Holiday/RequestHoliday",
+                        data: {
+                            start: startDate,
+                            end: endDate
+                        },
+                        success: function (data) {
+                            bootbox.dialog({
+                                title: "Holiday Request",
+                                message: data,
+                                className: "modalMedium"
+                            });
+                        }
+                    });
+                },
+                header: {
+                    left: '',
+                    center: 'title',
+                    right: 'today prev,next'
+                },
+                events: {
+                    url: '@Url.Action("GetUsersHolidays", "Holiday")',
+                    type: 'GET',
+                    data: {
+                        custom_param1: 'something',
+                        custom_param2: 'somethingelse'
+                    },
+                    error: function () {
+                        alert('there was an error while fetching events!');
+                    }
+                }
+            });
+
+            function formatDate(date) {
+
+                var dateObj = new Date(date);
+                var momentObj = moment(dateObj);
+                var momentString = momentObj.format('YYYY-MM-DD');
+                return momentString;
+            }
+
+
+        });
+    </script>  
+
+}

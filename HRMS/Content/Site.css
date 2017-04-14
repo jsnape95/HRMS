@@ -93,3 +93,7 @@
 .content-login {
     padding: 0px 33px;
 }
+
+.fc-content :hover {
+    cursor:pointer;
+}
