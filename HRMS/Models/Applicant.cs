@@ -23,5 +23,7 @@ namespace HRMS.Models
         public DateTime DateCreated { get; set; }
 
         public virtual List<VacancyApplicantLink> VacancyApplicantLinks { get; set; }
+
+        public virtual List<TimelineEvent> TimelineEvents { get; set; }
     }
 }

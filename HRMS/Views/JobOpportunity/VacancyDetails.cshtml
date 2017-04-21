@@ -67,7 +67,7 @@
                                                     <td>
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Details <span class="caret"></span></button>
                                                         <ul class="dropdown-menu dropdown-menu-details">
-                                                            <li><a href="#">View Timeline</a></li>
+                                                            <li><a href='@Url.Action("ApplicantTimeline", "JobOpportunity", new { applicantId = item.ApplicantId })'>View Timeline</a></li>
                                                             <li role ="separator" class="divider"></li>
                                                             <li class ="acceptApplicant"><a href="#">Accept Applicant</a></li>
                                                             <li class ="rejectApplicant"><a href="#">Reject Applicant</a></li>

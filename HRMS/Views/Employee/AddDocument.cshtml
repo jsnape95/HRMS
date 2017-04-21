@@ -1,0 +1,75 @@
+﻿@model HRMS.Models.EmployeeEmployeeDocumentLink
+
+<script>
+
+    $(".disable-me").prop("disabled", true);
+
+    $('#category-dropdown').on('change', function () {
+        getDocs();
+    });
+
+    function getDocs() {
+        var type = $('#category-dropdown').val();
+
+        if (type != 0) {
+            $.ajax({
+                type: "GET",
+                data: {
+                    "categoryType": type
+                },
+                url: "/Employee/GetCategoryDocuments",
+                success: function (data) {
+
+                    $(".disable-me").prop("disabled", false);
+                    //s$("#documentList").prop("disabled", false);
+
+                    $('#documentList').empty();
+                    $.each(data, function (i, item) {
+                        $('#documentList').append($('<option>', { value: data[i].EmployeeDocumentId, text: data[i].Name }));
+                    });
+                }
+            });
+        }
+    }
+
+</script>
+
+@{
+    List<HRMS.Models.EmployeeDocument> docs = ViewBag.Documents;
+}
+
+@using (Html.BeginForm("AddDocument", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.Label("Type", new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                @Html.EnumDropDownListFor(x => x.EmployeeDocument.DocumentCategory, " - Please Select - ", new { @class = "form-control", id = "category-dropdown" })
+            </div>
+
+            @Html.LabelFor(x => x.EmployeeDocumentId, "Name", new { @class = "col-md-1 control-label" })
+            <div class="col-md-4">
+                <select class="form-control disable-me" id="documentList" name="documentList">
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.URL, "Document", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                <input type="file" name="documentUpload" accept="" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left disable-me" id="submitForm">Save</button>
+            </div>
+        </div>
+
+        @Html.HiddenFor(x => x.EmployeeId)
+
+    </div>
+}

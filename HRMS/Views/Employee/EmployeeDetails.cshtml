@@ -1,38 +1,233 @@
 ﻿@model HRMS.Models.Employee
+@using System.Text.RegularExpressions
 
 @{
     ViewBag.Title = Model.FirstName + " " + Model.LastName;
 }
 
-@using (Html.BeginForm("", ""))
-{
-    <div class="row">
-        <div class="col-md-3">
-            <div class="box box-primary">
-                <div class="box-body">
-                    <img class="profile-picture img-responsive img-circle" alt="@Model.FirstName @Model.LastName profile image" title="@Model.FirstName @Model.LastName" src="@Model.ProfileImageUrl" />
-                    <h3 class="profile-username text-center">@Model.FirstName @Model.LastName</h3>
-                    <p class="text-muted text-center">@Model.Job.JobTitle</p>
+<div class="row">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary">
+                    <div class="box-body">
+                        <img class="profile-picture img-responsive img-circle" alt="@Model.FirstName @Model.LastName profile image" title="@Model.FirstName @Model.LastName" src="@Model.ProfileImageUrl" />
+                        <h3 class="profile-username text-center">@Model.FirstName @Model.LastName</h3>
+                        <p class="text-muted text-center">@Model.Job.JobTitle</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">Overview</a></li>
-                    <li class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Documents</a></li>
-                    <li class=""><a href="#history" data-toggle="tab" aria-expanded="false">History</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="overview">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-primary box-solid" id="requestBox">
+                    <div class="box-header">
+                        <h5 class="box-title">Holiday Requests</h5>
                     </div>
-                    <div class="tab-pane" id="documents">
-                    </div>
-                    <div class="tab-pane" id="history">
+                    <div class="box-body">
+                        @if (Model.EmployeeHolidayLinks.Where(x => x.Approved == HRMS.Models.ApprovedStatus.Pending).Count() == 0)
+                        {
+                            <p class="text-danger">Currently no holiday requests</p>
+                        }
+                        else
+                        {
+                            <table class="table table-hover table-condensed table-responsive mouse-hover" id="requestTable">
+                                <tbody>
+                                    @foreach (var request in Model.EmployeeHolidayLinks.Where(x => x.Approved == HRMS.Models.ApprovedStatus.Pending))
+                                    {
+                                        <tr data-id="@request.EmployeeHolidayLinkId">
+                                            <td>@request.Holiday.StartDate.ToLongDateString() - @request.Holiday.EndDate.ToLongDateString()</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+    <div class="col-md-9">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">Overview</a></li>
+                <li class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Documents</a></li>
+                <li class=""><a href="#holidays" data-toggle="tab" aria-expanded="false">Holidays</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="overview">
+                </div>
+                <div class="tab-pane" id="documents">
+                    <div class="row">
+                        <div class="col-md-8">
+                            @if (Model.EmployeeEmployeeDocumentLinks.Count() <= 0)
+                            {
+                                <p class="text-warning">Currently no documents in the database.</p>
+                            }
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-default" id="addDocument"><i class="fa fa-plus"></i> Add Document</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            @if (Model.EmployeeEmployeeDocumentLinks.Count() > 0)
+                            { 
+                                <table class="table table-striped table-responsive table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Document Name</th>
+                                            <th>Document Type</th>
+                                            <th>Download</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.EmployeeEmployeeDocumentLinks)
+                                        {
+                                            <tr>
+                                                <td>@item.EmployeeDocument.Name</td>
+                                                <td>@Regex.Replace(item.EmployeeDocument.DocumentCategory.ToString(), "(\\B[A-Z])", " $1")</td>
+                                                <td><a href="@item.URL" download><i class="fa fa-file"></i></a></td>
+                                            </tr>
+                                        }    
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                        
+                </div>
+                <div class="tab-pane" id="holidays">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="holiday-calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            var x = 1;
+
+            $('#requestBox').hide();
+
+            $('#addDocument').on('click', function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/Employee/AddDocument",
+                    data: {
+                        employeeId: @Model.EmployeeId ,
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Add Document",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var target = $(e.target).attr("href") // activated tab
+                if(target == "#holidays")
+                {
+                    $('#requestBox').show();
+
+                    if(x == 1)
+                    {
+                        $('#holiday-calendar').fullCalendar({
+                            weekends: false,
+                            selectable: true,
+                            showNonCurrentDates: false,
+                            header: {
+                                left: '',
+                                center: 'title',
+                                right: 'today prev,next'
+                            },
+                            events: {
+                                url: '@Url.Action("GetUsersHolidays", "Holiday")',
+                                type: 'GET',
+                                data: {
+                                    employeeId: @Model.EmployeeId ,
+                                },
+                                error: function () {
+                                    alert('there was an error while fetching events!');
+                                }
+                            },
+                            eventClick: function(calEvent, jsEvent, view) {
+
+                                $.ajax({
+                                    type: "GET",
+                                    url: "/Holiday/HolidayDecision",
+                                    data: {
+                                        linkId: calEvent.id
+                                    },
+                                    success: function (data) {
+
+                                        bootbox.dialog({
+                                            title: "Holiday Information",
+                                            message: data,
+                                            className: "modalMedium"
+                                        });
+                                    }
+                                });
+
+                            }
+                        });
+
+                        function formatDate(date) {
+
+                            var dateObj = new Date(date);
+                            var momentObj = moment(dateObj);
+                            var momentString = momentObj.format('YYYY-MM-DD');
+                            return momentString;
+                        }
+
+                        x++;
+                    }
+                }
+                else{
+                    $('#requestBox').hide();
+                }
+            });
+
+            $('#requestTable tr').on('click', function (){
+                
+                var id = $(this).data('id');                
+
+                $.ajax({
+                    type: "GET",
+                    url: "/Holiday/HolidayDecision",
+                    data: {
+                        linkId: id
+                    },
+                    success: function (data) {
+
+                        bootbox.dialog({
+                            title: "Holiday Information",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+            });    
+            
+
+            
+            
+        });
+
+        
+    </script>    
 }

@@ -1,0 +1,38 @@
+﻿@model HRMS.Models.EmployeeHolidayLink
+
+@using (Html.BeginForm("CancelRequest", "Holiday", FormMethod.Post))
+{
+
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-1">
+                <table class="table table-bordered table-responsive">
+                    <tr>
+                        <th width="40%">Requested Start Date:</th>
+                        <td>@Model.Holiday.StartDate.ToLongDateString() @Model.Holiday.StartDate.ToLongTimeString()</td>
+                    </tr>
+                    <tr>
+                        <th>Requested End Date:</th>
+                        <td>@Model.Holiday.EndDate.ToLongDateString() @Model.Holiday.EndDate.ToLongTimeString()</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                @if (Model.Approved == HRMS.Models.ApprovedStatus.Pending)
+                {
+                    <button type="submit" class="btn btn-danger pull-right margin-10-left">Cancel Request</button>
+                }
+            </div>
+        </div>
+
+        @Html.HiddenFor(x => x.EmployeeHolidayLinkId)
+        @Html.HiddenFor(x => x.EmployeeId)
+        @Html.HiddenFor(x => x.HolidayId)
+
+    </div>
+}

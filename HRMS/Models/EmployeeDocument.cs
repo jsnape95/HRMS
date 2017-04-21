@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRMS.Models
 {
@@ -10,17 +8,28 @@ namespace HRMS.Models
         [Key]
         public int EmployeeDocumentId { get; set; }
 
-        public DocumentType DocumentType { get; set; }
+        public string Name { get; set; }
 
-        public string DocumentURL { get; set; }
+        public DocumentCategory DocumentCategory { get; set; }
 
-        [Required]
-        public int EmployeeId { get; set; }
-
-        public virtual Employee Employee { get; set; }
+        public virtual List<EmployeeEmployeeDocumentLink> EmployeeEmployeeDocumentLinks { get; set; }
     }
 
-    public enum DocumentType {
-        Contract = 1
+    public enum DocumentCategory
+    {
+        [Display(Name = "Personal Documents")]
+        PersonalDocument = 1,
+
+        [Display(Name = "Pre-Employement")]
+        PreEmployment = 2,
+
+        [Display(Name = "Induction Forms")]
+        InductionForms = 3,
+
+        [Display(Name = "L&D")]
+        LearningAndDevelopment = 4,
+
+        [Display(Name = "Other")]
+        Other = 5
     };
 }

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace HRMS.Controllers
 {
@@ -80,12 +81,13 @@ namespace HRMS.Controllers
             var originalFilename = Path.GetFileName(profileImage.FileName);
             string guid = Guid.NewGuid().ToString().Replace("-", "");
             string userName = employee.FirstName.ToLower() + "_" + employee.LastName.ToLower();
-            string newFileName = userName + "_" + guid + Path.GetExtension(profileImage.FileName);
+            string newFileName = userName + "_" + guid;
+            string newFileNameExt = userName + "_" + guid + Path.GetExtension(profileImage.FileName);
 
             var x = Server.MapPath(profileImage.FileName);
              
             //save locally
-            var path = Path.Combine(Server.MapPath("~/Images/Employees/"), newFileName);
+            var path = Path.Combine(Server.MapPath("~/Images/Employees/"), newFileNameExt);
             profileImage.SaveAs(path);
 
             //save to cloud
@@ -99,8 +101,62 @@ namespace HRMS.Controllers
 
             return RedirectToAction("Index");
         }
-        
-        
+
+        [HttpGet]
+        public PartialViewResult AddDocument(int employeeId)
+        {
+            
+
+            var link = new EmployeeEmployeeDocumentLink();
+            link.EmployeeId = employeeId;
+
+            return PartialView(link);
+        }
+
+        [HttpPost]
+        public ActionResult AddDocument(EmployeeEmployeeDocumentLink link, int documentList, HttpPostedFileBase documentUpload)
+        {
+            var employee = db.Employees.FirstOrDefault(y => y.EmployeeId == link.EmployeeId);
+            var document = db.EmployeeDocuments.FirstOrDefault(y => y.EmployeeDocumentId == documentList);
+
+            var originalFilename = Path.GetFileName(documentUpload.FileName);
+            string guid = Guid.NewGuid().ToString().Replace("-", "");
+            string userName = employee.FirstName.ToLower() + "_" + employee.LastName.ToLower() + "_" + Regex.Replace(document.Name, @"\s+", "").ToLower();
+            string newFileName = userName + "_" + guid;
+            string newFileNameExt = userName + "_" + guid + Path.GetExtension(documentUpload.FileName);
+
+            var x = Server.MapPath(documentUpload.FileName);
+
+            //save locally
+            var path = Path.Combine(Server.MapPath("~/Files/Employees/"), newFileNameExt);
+            documentUpload.SaveAs(path);
+
+            //save to cloud
+            var cloud = new Helpers.CloudStroage();
+            var url = "";
+
+            if (documentUpload.ContentType.Contains("image"))
+            {
+                url = cloud.UploadImage(path, newFileName);
+            }
+            else
+            {
+                url = cloud.UploadFile(path, newFileName);
+            } 
+
+            
+            link.EmployeeDocument = null;
+            link.EmployeeDocumentId = documentList;
+            link.DateUploaded = DateTime.Now;
+            link.URL = url;
+
+            db.EmployeeEmployeeDocumentLinks.Add(link);
+            db.SaveChanges();
+
+            return RedirectToAction("");
+        }
+
+
         public JsonResult GetDepartmentJobs(int departmentId)
         {
             //database call to pull all the jobs for the chose department
@@ -111,5 +167,18 @@ namespace HRMS.Controllers
 
             return Json(jsonJobs, JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult GetCategoryDocuments(int categoryType)
+        {
+            //database call to pull all the jobs for the chose department
+            var docs = db.EmployeeDocuments.Where(x => x.DocumentCategory == (DocumentCategory)categoryType).OrderBy(x => x.Name).ToList();
+
+            //converts to an object that can be used with json
+            var jsonDocs = docs.Select(x => new EmployeeDocument { EmployeeDocumentId = x.EmployeeDocumentId, Name = x.Name});
+
+            return Json(jsonDocs, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

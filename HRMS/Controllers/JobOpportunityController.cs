@@ -1,6 +1,7 @@
 ﻿using HRMS.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -87,6 +88,21 @@ namespace HRMS.Controllers
              * Add applicant cv to the cloud
              *
              */
+            var originalFilename = Path.GetFileName(cvUpload.FileName);
+            string guid = Guid.NewGuid().ToString().Replace("-", "");
+            string userName = applicant.FirstName.ToLower() + "_" + applicant.LastName.ToLower() + "_cv";
+            string newFileName = userName + "_" + guid;
+            string newFileNameExt = userName + "_" + guid + Path.GetExtension(cvUpload.FileName);
+
+            var x = Server.MapPath(cvUpload.FileName);
+
+            //save locally
+            var path = Path.Combine(Server.MapPath("~/Files/Employees/"), newFileNameExt);
+            cvUpload.SaveAs(path);
+
+            //save to cloud
+            var cloud = new Helpers.CloudStroage();
+            var url = cloud.UploadFile(path, newFileName);
 
             db.Applicants.Add(applicant);
             db.SaveChanges();
@@ -100,6 +116,12 @@ namespace HRMS.Controllers
 
             db.VacancyApplicantLinks.Add(vacancyApplicantLink);
             db.SaveChanges();
+
+            //add event to timeline
+            AddTimelineEvent(applicant.ApplicantId, Event.Other, "Applicant Added", applicant.FirstName + " " + applicant.LastName + " has been added as an applicant", DateTime.Now);
+
+            //add cv event to timeline
+            AddTimelineEvent(applicant.ApplicantId, Event.CV, "CV Uploaded", applicant.FirstName + " " + applicant.LastName + "'s CV has been successfully uploaded", DateTime.Now);
 
             return RedirectToAction("VacancyDetails", new { vacancyId = vacancyId });
         }
@@ -147,13 +169,22 @@ namespace HRMS.Controllers
                 StartDate = employee.StartDate,
                 //WORK OUT HOLIDAY ENTITLEMENT - JS
                 HolidayEntitlement = 28
-
-
-
             };
 
             db.Employees.Add(newEmployee);
+            db.SaveChanges();
 
+            var document = db.EmployeeDocuments.FirstOrDefault(x => x.Name == "CV");
+
+            var newDocLink = new EmployeeEmployeeDocumentLink
+            {
+                EmployeeId = newEmployee.EmployeeId,
+                EmployeeDocumentId = document.EmployeeDocumentId,
+                DateUploaded = DateTime.Now,
+                URL = applicant.ResumeURL
+            };
+
+            db.EmployeeEmployeeDocumentLinks.Add(newDocLink);
             db.SaveChanges();
 
             return RedirectToAction("VacancyDetails", new { vacancyId = vacancyId} );
@@ -174,6 +205,71 @@ namespace HRMS.Controllers
         public ActionResult ViewApplicants()
         {
             return View();
+        }
+
+        public ActionResult ApplicantTimeline(int applicantId)
+        {
+            var applicant = db.Applicants.FirstOrDefault(x => x.ApplicantId == applicantId);
+
+            return View(applicant);
+        }
+
+        [HttpGet]
+        public PartialViewResult CreateTimelineEvent(int applicantId)
+        {
+            var tEvent = new TimelineEvent();
+            tEvent.ApplicantId = applicantId;
+            tEvent.DateCreated = DateTime.Now.Date;
+
+            return PartialView(tEvent);
+        }
+
+        [HttpPost]
+        public ActionResult CreateTimelineEvent(TimelineEvent tEvent)
+        {
+            //if (!ModelState.IsValid)
+            //{
+                
+            //}
+
+            AddTimelineEvent(tEvent.ApplicantId, tEvent.Event, tEvent.Heading, tEvent.Notes, tEvent.DateCreated);
+
+            return RedirectToAction("ApplicantTimeline", new { applicantId = tEvent.ApplicantId });
+        }
+
+
+        public void AddTimelineEvent(int applicantId, Event tEvent, string heading, string notes, DateTime eventDate)
+        {
+            var fontAwesome = "";
+            switch (tEvent)
+            {
+                case Event.Interview:
+                    fontAwesome = "fa-microphone";
+                    break;
+                case Event.Assessment:
+                    fontAwesome = "fa-pencil";
+                    break;
+                case Event.CV:
+                    fontAwesome = "fa-file-text";
+                    break;
+                case Event.BackgroundCheck:
+                    fontAwesome = "fa-binoculars";
+                    break;
+                case Event.Other:
+                    fontAwesome = "fa-question";
+                    break;
+            }
+            var timelineEvent = new TimelineEvent
+            {
+                ApplicantId = applicantId,
+                Event = tEvent,
+                Heading = heading,
+                Notes = notes,
+                DateCreated = eventDate,
+                FontAwesomeIcon = fontAwesome
+            };
+            db.TimelineEvents.Add(timelineEvent);
+            db.SaveChanges();
         }
 
     }

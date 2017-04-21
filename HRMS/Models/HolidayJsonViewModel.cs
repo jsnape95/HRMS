@@ -7,6 +7,8 @@ namespace HRMS.Models
 {
     public class HolidayJsonViewModel
     {
+        public int id { get; set; }
+
         public string title { get; set; }
 
         public string start { get; set; }

@@ -52,12 +52,13 @@ namespace HRMS.Models
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeDocument> EmployeeDocuments { get; set; }
+        public DbSet<EmployeeEmployeeDocumentLink> EmployeeEmployeeDocumentLinks { get; set; }
         public DbSet<EmployeeHolidayLink> EmployeeHolidayLinks { get; set; }
         public DbSet<Holiday> Holidays { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<TimelineEvent> TimelineEvents { get; set; }
         public DbSet<Vacancy> Vacancies { get; set; }
         public DbSet<VacancyApplicantLink> VacancyApplicantLinks { get; set; }
-
 
     }
 }

@@ -1,0 +1,67 @@
+﻿@model HRMS.Models.Applicant
+
+@{
+    ViewBag.Title = "Applicant Timeline - " + Model.FirstName + " " + Model.LastName;
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <ul class="timeline">
+
+            @foreach (var item in Model.TimelineEvents.OrderBy(x => x.DateCreated))
+            {
+                <!-- timeline time label -->
+                <li class="time-label">
+                    <span class="bg-red">@item.DateCreated.ToLongDateString()</span>
+                </li>
+                <!-- /.timeline-label -->
+
+                <!-- timeline item -->
+                <li>
+                    <!-- timeline icon -->
+                    <i class="fa @item.FontAwesomeIcon bg-blue"></i>
+                    <div class="timeline-item">
+                        <span class="time"><i class="fa fa-clock-o"></i> @item.DateCreated.ToShortTimeString()</span>
+                        <h3 class="timeline-header">@item.Heading</h3>
+                        <div class="timeline-body">
+                            @item.Notes
+                        </div>
+                    </div>
+                </li>
+            <!-- END timeline item -->
+            }
+            <li>
+                <i class="fa fa-plus bg-green mouse-hover" id="add-event" data-id="@Model.ApplicantId"></i>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#add-event').on('click', function () {
+
+                var applicantId = $(this).data('id');
+                $.ajax({
+                    type: "GET",
+                    data: {
+                        applicantId: applicantId
+                    },
+                    url: "/JobOpportunity/CreateTimelineEvent",
+                    beforeSend: function () {
+
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Add Timeline Event",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+            });
+        });
+    </script>    
+}

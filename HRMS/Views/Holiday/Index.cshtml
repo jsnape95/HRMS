@@ -15,9 +15,42 @@
     {
 
         <div class="col-md-3">
-            <div class="box box-primary">
+            <div class="box box-primary box-solid">
+                <div class="box-header">
+                    <h3 class="box-title">Enitlement Summary</h3>
+                </div>
                 <div class="box-body">
-                    <div class="box-title"></div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Entitlement Amount:  
+                                <span class="pull-right">
+                                    <span class="label label-primary pull-right">@Model.Employee.HolidayEntitlement</span>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                Current Remaining:
+                                <span class="pull-right">
+                                    <span class="label label-success pull-right">@ViewBag.CurrentRemaining</span>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>
+                                Provisional Remaining:
+                                <span class="pull-right">
+                                    <span class="label label-warning pull-right">@ViewBag.ProvisionalRemaining</span>
+                                </span>
+                            </h4>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,6 +70,7 @@
     <script>
         $(document).ready(function () {
 
+            var provisionalDays = @ViewBag.ProvisionalRemaining ;
 
             $('#holiday-calendar').fullCalendar({
                 weekends: false,
@@ -52,14 +86,26 @@
                         url: "/Holiday/RequestHoliday",
                         data: {
                             start: startDate,
-                            end: endDate
+                            end: endDate,
+                            provisionalDays: provisionalDays
                         },
                         success: function (data) {
-                            bootbox.dialog({
-                                title: "Holiday Request",
-                                message: data,
-                                className: "modalMedium"
-                            });
+                            if (data.status == 0) {
+                                bootbox.alert("You can not make another holiday request as you currently do not have any provisional days remaining.");
+                            }
+                            else if (data.status == 1) {
+                                bootbox.alert("The number of days that have been requested are above your provisonal amount remaining. Please try again.");
+                            }
+                            else if (data.status == 2) {
+                                bootbox.alert("You have already made a holiday request for the chosen date(s). Please try again.");
+                            }
+                            else {
+                                bootbox.dialog({
+                                    title: "Holiday Request",
+                                    message: data,
+                                    className: "modalMedium"
+                                });
+                            }
                         }
                     });
                 },
@@ -72,12 +118,35 @@
                     url: '@Url.Action("GetUsersHolidays", "Holiday")',
                     type: 'GET',
                     data: {
-                        custom_param1: 'something',
-                        custom_param2: 'somethingelse'
                     },
                     error: function () {
                         alert('there was an error while fetching events!');
                     }
+                },
+                eventClick: function(calEvent, jsEvent, view) {
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/Holiday/HolidayInformation",
+                        data: {
+                            linkId: calEvent.id
+                        },
+                        success: function (data) {
+                            
+                            bootbox.dialog({
+                                title: "Holiday Information",
+                                message: data,
+                                className: "modalMedium"
+                            });
+                        }
+                    });
+                    
+                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                    //alert('View: ' + view.name);
+
+                    // change the border color just for fun
+                    //$(this).css('border-color', 'red');
+
                 }
             });
 

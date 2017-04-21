@@ -37,7 +37,7 @@ namespace HRMS.Helpers
             return uploadResult.Uri.ToString();
         }
 
-        public string UploadFile(string filepath)
+        public string UploadFile(string filepath, string filename)
         {
             var cloudinary = new Cloudinary(
                 new Account(
@@ -49,7 +49,8 @@ namespace HRMS.Helpers
 
             var uploadParams = new RawUploadParams()
             {
-                File = new FileDescription(filepath)
+                File = new FileDescription(filepath),
+                PublicId = filename
             };
 
             var uploadResult = cloudinary.Upload(uploadParams);

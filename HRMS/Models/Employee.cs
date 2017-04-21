@@ -51,6 +51,6 @@ namespace HRMS.Models
 
         public virtual List<EmployeeHolidayLink> EmployeeHolidayLinks { get; set; }
 
-        public virtual List<EmployeeDocument> EmployeeDocuments { get; set; }
+        public virtual List<EmployeeEmployeeDocumentLink> EmployeeEmployeeDocumentLinks { get; set; }
     }
 }

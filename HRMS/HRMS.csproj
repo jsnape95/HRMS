@@ -219,12 +219,14 @@
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeDocument.cs" />
+    <Compile Include="Models\EmployeeEmployeeDocumentLink.cs" />
     <Compile Include="Models\EmployeeHolidayLink.cs" />
     <Compile Include="Models\Holiday.cs" />
     <Compile Include="Models\HolidayJsonViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Job.cs" />
+    <Compile Include="Models\TimelineEvent.cs" />
     <Compile Include="Models\Vacancy.cs" />
     <Compile Include="Models\VacancyApplicantLink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1032,6 +1034,11 @@
     <Content Include="Views\JobOpportunity\AddApplicant.cshtml" />
     <Content Include="Views\JobOpportunity\AcceptApplicant.cshtml" />
     <Content Include="Views\Holiday\RequestHoliday.cshtml" />
+    <Content Include="Views\Holiday\HolidayInformation.cshtml" />
+    <Content Include="Views\JobOpportunity\ApplicantTimeline.cshtml" />
+    <Content Include="Views\JobOpportunity\CreateTimelineEvent.cshtml" />
+    <Content Include="Views\Employee\AddDocument.cshtml" />
+    <Content Include="Views\Holiday\HolidayDecision.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
