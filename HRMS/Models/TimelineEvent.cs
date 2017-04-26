@@ -12,7 +12,7 @@ namespace HRMS.Models
         public int TimelineEventId { get; set; }
 
         [Required]
-        public int ApplicantId { get; set; }
+        public int VacancyApplicantLinkId { get; set; }
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "Select a correct event")]
@@ -30,7 +30,7 @@ namespace HRMS.Models
         public DateTime DateCreated { get; set; }
 
 
-        public virtual Applicant Applicant { get; set; }
+        public virtual VacancyApplicantLink VacancyApplicantLink { get; set; }
 
     }
 

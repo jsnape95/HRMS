@@ -97,3 +97,11 @@
 .fc-content :hover {
     cursor:pointer;
 }
+
+.dataTables_paginate.paging_bootstrap {
+    float: right !important;
+}
+
+.dataTables_filter{
+    float: right !important;
+}

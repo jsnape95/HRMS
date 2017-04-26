@@ -14,6 +14,18 @@ namespace HRMS.Controllers
         public ActionResult Index()
         {
 
+            var user = db.Users.FirstOrDefault(x => x.Email == User.Identity.Name);
+
+            if (User.IsInRole("Admin"))
+            {
+                //send to reports section
+
+            }
+            else
+            {
+                //redirect to 
+            }
+
 
             return View();
         }

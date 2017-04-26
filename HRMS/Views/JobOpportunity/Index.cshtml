@@ -4,6 +4,13 @@
     ViewBag.Title = "Job Board";
 }
 
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li><i class="fa fa-briefcase"></i> Job Opportunities</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
 @using (Html.BeginForm("", ""))
 {
     for (var x = 0; x < Model.Count; x++)

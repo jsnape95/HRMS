@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace HRMS.Models
@@ -18,6 +19,8 @@ namespace HRMS.Models
         public virtual Vacancy Vacancy { get; set; }
 
         public virtual Applicant Applicant { get; set; }
+
+        public virtual List<TimelineEvent> TimelineEvents { get; set; }
     }
 
     public enum Status {

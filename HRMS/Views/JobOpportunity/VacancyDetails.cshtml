@@ -6,6 +6,14 @@
     List<HRMS.Models.VacancyApplicantLink> closedList = ViewBag.Closed;
 }
 
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li><i class="fa fa-briefcase"></i> Job Opportunities</li>
+        <li><a href="@Url.Action("Index")">Job Board</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
 @using (Html.BeginForm("", ""))
 {
     <div class="box box-primary">
@@ -48,7 +56,7 @@
                             <div class="tab-pane active" id="current">
                                 @if (openList.Count() > 0)
                                 {
-                                    <table class="table table-striped table-responsive table-hover">
+                                    <table class="table table-striped table-responsive table-hover" id="currentAppsTbl">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -67,7 +75,7 @@
                                                     <td>
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Details <span class="caret"></span></button>
                                                         <ul class="dropdown-menu dropdown-menu-details">
-                                                            <li><a href='@Url.Action("ApplicantTimeline", "JobOpportunity", new { applicantId = item.ApplicantId })'>View Timeline</a></li>
+                                                            <li><a href='@Url.Action("ApplicantTimeline", "JobOpportunity", new { linkId = item.VacancyApplicantLinkId })'>View Timeline</a></li>
                                                             <li role ="separator" class="divider"></li>
                                                             <li class ="acceptApplicant"><a href="#">Accept Applicant</a></li>
                                                             <li class ="rejectApplicant"><a href="#">Reject Applicant</a></li>
@@ -129,6 +137,13 @@
     <script>
 
         $(document).ready(function () {
+
+            $('#currentAppsTbl').DataTable({
+                "paging":   false,
+                "ordering": false,
+                "info":     false
+            });
+
             $('#addApplicant').on('click', function () {
 
                 var vacancyId = @Model.VacancyId

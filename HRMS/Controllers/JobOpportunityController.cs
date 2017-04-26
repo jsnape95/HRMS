@@ -118,10 +118,10 @@ namespace HRMS.Controllers
             db.SaveChanges();
 
             //add event to timeline
-            AddTimelineEvent(applicant.ApplicantId, Event.Other, "Applicant Added", applicant.FirstName + " " + applicant.LastName + " has been added as an applicant", DateTime.Now);
+            AddTimelineEvent(vacancyApplicantLink.VacancyApplicantLinkId, Event.Other, "Applicant Added", applicant.FirstName + " " + applicant.LastName + " has been added as an applicant", DateTime.Now);
 
             //add cv event to timeline
-            AddTimelineEvent(applicant.ApplicantId, Event.CV, "CV Uploaded", applicant.FirstName + " " + applicant.LastName + "'s CV has been successfully uploaded", DateTime.Now);
+            AddTimelineEvent(vacancyApplicantLink.VacancyApplicantLinkId, Event.CV, "CV Uploaded", applicant.FirstName + " " + applicant.LastName + "'s CV has been successfully uploaded", DateTime.Now);
 
             return RedirectToAction("VacancyDetails", new { vacancyId = vacancyId });
         }
@@ -207,18 +207,18 @@ namespace HRMS.Controllers
             return View();
         }
 
-        public ActionResult ApplicantTimeline(int applicantId)
+        public ActionResult ApplicantTimeline(int linkId)
         {
-            var applicant = db.Applicants.FirstOrDefault(x => x.ApplicantId == applicantId);
+            var link = db.VacancyApplicantLinks.FirstOrDefault(x => x.VacancyApplicantLinkId == linkId);
 
-            return View(applicant);
+            return View(link);
         }
 
         [HttpGet]
-        public PartialViewResult CreateTimelineEvent(int applicantId)
+        public PartialViewResult CreateTimelineEvent(int linkId)
         {
             var tEvent = new TimelineEvent();
-            tEvent.ApplicantId = applicantId;
+            tEvent.VacancyApplicantLinkId = linkId;
             tEvent.DateCreated = DateTime.Now.Date;
 
             return PartialView(tEvent);
@@ -232,13 +232,13 @@ namespace HRMS.Controllers
                 
             //}
 
-            AddTimelineEvent(tEvent.ApplicantId, tEvent.Event, tEvent.Heading, tEvent.Notes, tEvent.DateCreated);
+            AddTimelineEvent(tEvent.VacancyApplicantLinkId, tEvent.Event, tEvent.Heading, tEvent.Notes, tEvent.DateCreated);
 
-            return RedirectToAction("ApplicantTimeline", new { applicantId = tEvent.ApplicantId });
+            return RedirectToAction("ApplicantTimeline", new { applicantId = tEvent.VacancyApplicantLinkId });
         }
 
 
-        public void AddTimelineEvent(int applicantId, Event tEvent, string heading, string notes, DateTime eventDate)
+        public void AddTimelineEvent(int linkId, Event tEvent, string heading, string notes, DateTime eventDate)
         {
             var fontAwesome = "";
             switch (tEvent)
@@ -261,7 +261,7 @@ namespace HRMS.Controllers
             }
             var timelineEvent = new TimelineEvent
             {
-                ApplicantId = applicantId,
+                VacancyApplicantLinkId = linkId,
                 Event = tEvent,
                 Heading = heading,
                 Notes = notes,

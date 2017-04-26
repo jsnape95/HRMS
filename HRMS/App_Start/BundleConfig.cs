@@ -28,6 +28,8 @@ namespace HRMS
     "~/Content/AdminLTE/js/plugins/daterangepicker/daterangepicker.js",
     "~/Content/AdminLTE/js/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js",
     "~/Content/AdminLTE/js/plugins/iCheck/icheck.min.js",
+    "~/Content/AdminLTE/js/plugins/datatables/jquery.dataTables.js",
+     "~/Content/AdminLTE/js/plugins/datatables/dataTables.bootstrap.js", 
     "~/Content/AdminLTE/js/AdminLTE/app.js",
     "~/Scripts/bootbox.min.js",
     "~/Scripts/bootstrap-datepicker.min.js"));
@@ -56,6 +58,7 @@ namespace HRMS
      "~/Content/AdminLTE/css/fullcalendar/fullcalendar.css",
      "~/Content/AdminLTE/css/daterangepicker/daterangepicker-bs3.css",
      "~/Content/AdminLTE/css/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css",
+     "~/Content/AdminLTE/css/dataTables.bootstrap.css",
       "~/Content/AdminLTE/css/AdminLTE.css",
       "~/Content/Site.css",
       "~/Content/bootstrap-datepicker.min.css",

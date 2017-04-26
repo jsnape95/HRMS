@@ -4,6 +4,13 @@
     ViewBag.Title = "My Holidays";
 }
 
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li><i class="fa fa-globe"></i> Holidays</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+}
+
 <div class="row">
     @if (Model.Employee == null)
     {

@@ -426,6 +426,19 @@ namespace HRMS.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult Settings()
+        {
+            return View();
+        }
+
+        public async Task<ActionResult> UpgradeToAdmin(string userId)
+        {
+            await UserManager.AddToRoleAsync(userId, "Admin");
+            return RedirectToAction("Settings");
+            
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

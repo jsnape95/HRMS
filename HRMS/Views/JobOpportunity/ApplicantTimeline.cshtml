@@ -1,7 +1,16 @@
-﻿@model HRMS.Models.Applicant
+﻿@model HRMS.Models.VacancyApplicantLink
 
 @{
-    ViewBag.Title = "Applicant Timeline - " + Model.FirstName + " " + Model.LastName;
+    ViewBag.Title = "Applicant Timeline - " + Model.Applicant.FirstName + " " + Model.Applicant.LastName;
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li><i class="fa fa-briefcase"></i> Job Opportunities</li>
+        <li><a href="@Url.Action("Index")">Job Board</a></li>
+        <li><a href="@Url.Action("VacancyDetails", new { vacancyId = Model.VacancyApplicantLinkId })">Vacancy Details</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
 }
 
 <div class="row">
@@ -31,7 +40,7 @@
             <!-- END timeline item -->
             }
             <li>
-                <i class="fa fa-plus bg-green mouse-hover" id="add-event" data-id="@Model.ApplicantId"></i>
+                <i class="fa fa-plus bg-green mouse-hover" id="add-event" data-id="@Model.VacancyApplicantLinkId"></i>
             </li>
 
         </ul>
@@ -43,11 +52,11 @@
         $(document).ready(function () {
             $('#add-event').on('click', function () {
 
-                var applicantId = $(this).data('id');
+                var linkId = $(this).data('id');
                 $.ajax({
                     type: "GET",
                     data: {
-                        applicantId: applicantId
+                        linkId: linkId
                     },
                     url: "/JobOpportunity/CreateTimelineEvent",
                     beforeSend: function () {

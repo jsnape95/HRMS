@@ -1,6 +1,13 @@
 ﻿
 @{
-    ViewBag.Title = "Employees";
+    ViewBag.Title = "Search Employees";
+}
+
+@section Breadcrumbs{
+    <ol class="breadcrumb">
+        <li><i class="fa fa-users"></i> Employees</li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>    
 }
 
 @using (Ajax.BeginForm("EmployeeResults", "Employee", new AjaxOptions { UpdateTargetId = "employeeResults" }, new { id = "employeeSearch" }))
@@ -31,6 +38,8 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
+
+            $('#employee-table').DataTable();
 
             $('#submitForm').on('click', function () {
                 $('#employeeSearch').submit();

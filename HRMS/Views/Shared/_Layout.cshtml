@@ -85,10 +85,8 @@
                 <h1>
                     @ViewBag.Title
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="@Url.Content("~")"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">@ViewBag.Title</li>
-                </ol>
+                @RenderSection("Breadcrumbs", required: false)
+                
             </section>
             <!-- Main content -->
             <section class="content">
