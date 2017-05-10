@@ -8,7 +8,7 @@ namespace HRMS.Helpers
 {
     public class EmailDistribution
     {
-        public void SendEmail(string emailTo, string subject)
+        public void SendEmail(string emailTo, string subject, string text, string html)
         {
             var email = new EmailDistributionData();
             email.AddEmail(
@@ -18,8 +18,8 @@ namespace HRMS.Helpers
                     "",
                     subject,
                     new List<string>{ },
-                    "Welcome to the HRMS.",
-                    "<html><body><p>Welcome to the HRMS!</p></body></html>",
+                    text,
+                    html,
                     1,
                     "",
                     "",

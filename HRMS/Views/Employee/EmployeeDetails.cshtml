@@ -60,17 +60,20 @@
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#overview" data-toggle="tab" aria-expanded="true">Overview</a></li>
-                <li class=""><a href="#documents" data-toggle="tab" aria-expanded="false">Documents</a></li>
-                <li class=""><a href="#holidays" data-toggle="tab" aria-expanded="false">Holidays</a></li>
+                <li><a href="#documents" data-toggle="tab" aria-expanded="false">Documents</a></li>
+                <li><a href="#holidays" data-toggle="tab" aria-expanded="false">Holidays</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="overview">
-
-
-                    @* Stuff about employee *@
-
                     <div class="form-horizontal">
 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right">
+                                    <a href="#" id="editEmp"><i class="fa fa-pencil"></i> Edit</a>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <div class="col-md-2">
@@ -100,7 +103,7 @@
                                 Line Manager:
                             </div>
                             <div class="col-md-4">
-                                @Model.LineManager.FirstName @Model.LineManager.LastName
+                                @(Model.LineManager == null ? "-": Model.LineManager.Fullname )
                             </div>
                         </div>
 
@@ -207,6 +210,23 @@
             var x = 1;
 
             $('#requestBox').hide();
+
+            $('#editEmp').on('click', function (){
+                $.ajax({
+                    type: "GET",
+                    url: "/Employee/EditEmployee",
+                    data: {
+                        employeeId: @Model.EmployeeId ,
+                    },
+                    success: function (data) {
+                        bootbox.dialog({
+                            title: "Edit Employee",
+                            message: data,
+                            className: "modalMedium"
+                        });
+                    }
+                });
+            });
 
             $('#addDocument').on('click', function () {
                 $.ajax({

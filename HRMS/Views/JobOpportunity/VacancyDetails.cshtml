@@ -4,6 +4,17 @@
     ViewBag.Title = "Vacancy Details";
     List<HRMS.Models.VacancyApplicantLink> openList = ViewBag.Open;
     List<HRMS.Models.VacancyApplicantLink> closedList = ViewBag.Closed;
+
+    string boxColour = "";
+
+    if (Model.OpenDate <= DateTime.Now && Model.CloseDate >= DateTime.Now)
+    {
+        boxColour = "bg-olive";
+    }
+    else if (Model.OpenDate >= DateTime.Now)
+    {
+        boxColour = "bg-yellow";
+    }
 }
 
 @section Breadcrumbs{
@@ -20,7 +31,7 @@
         <div class="box-body">
             <div class="row">
                 <div class="col-md-3">
-                    <div class="small-box bg-olive">
+                    <div class="small-box @boxColour">
                         <div class="inner">
                             <h4>@Model.Job.JobTitle</h4>
                         </div>
@@ -73,12 +84,22 @@
                                                     <td>@item.Applicant.Email</td>
                                                     <td>@item.Applicant.DateOfBirth.ToLongDateString()</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Details <span class="caret"></span></button>
-                                                        <ul class="dropdown-menu dropdown-menu-details">
-                                                            <li><a href='@Url.Action("ApplicantTimeline", "JobOpportunity", new { linkId = item.VacancyApplicantLinkId })'>View Timeline</a></li>
-                                                            <li role ="separator" class="divider"></li>
-                                                            <li class ="acceptApplicant"><a href="#">Accept Applicant</a></li>
-                                                            <li class ="rejectApplicant"><a href="#">Reject Applicant</a></li>
+                                                        <ul class="nav navbar-nav">
+                                                            <li class="dropdown tasks-menu">
+                                                                <a href="#" class="dropdown-toggle a-normal-text" data-toggle="dropdown">
+                                                                    More Options <i class="caret"></i>
+                                                                </a>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <!-- inner menu: contains the actual data -->
+                                                                        <ul class="menu">
+                                                                            <li><a href='@Url.Action("ApplicantTimeline", "JobOpportunity", new { linkId = item.VacancyApplicantLinkId })'>View Timeline</a></li>
+                                                                            <li class="acceptApplicant"><a href="#">Accept Applicant</a></li>
+                                                                            <li class="rejectApplicant"><a href="#">Reject Applicant</a></li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
                                                         </ul>
                                                     </td>
                                                 </tr>
@@ -139,9 +160,6 @@
         $(document).ready(function () {
 
             $('#currentAppsTbl').DataTable({
-                "paging":   false,
-                "ordering": false,
-                "info":     false
             });
 
             $('#addApplicant').on('click', function () {
@@ -232,6 +250,8 @@
                     }
                 });
             });
+
+
         });
 
 

@@ -99,7 +99,78 @@ namespace HRMS.Controllers
             db.Employees.Add(employee);
             db.SaveChanges();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("EmployeeDetails", new { id = employee.EmployeeId });
+        }
+
+        [HttpGet]
+        public PartialViewResult EditEmployee(int employeeId)
+        {
+            var employee = db.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
+
+            var lineManagers = new SelectList(
+                    db.Employees.Where(x => x.IsManager).OrderBy(x => x.FirstName).Select(x => new
+                    {
+                        ManagerId = x.EmployeeId,
+                        Name = x.FirstName + " " + x.LastName
+                    }
+                    ).ToList(), "ManagerId", "Name");
+
+
+            //get all departments and convert to dropdown
+            var departments = new SelectList(
+                    db.Departments.OrderBy(x => x.Name),
+                    "DepartmentId",
+                    "Name",
+                    employee.Job.DepartmentId
+                );
+
+            //get all jobs and convert to dropdown
+            var jobs = new SelectList(
+                    db.Jobs.OrderBy(x => x.JobTitle),
+                    "JobId",
+                    "JobTitle",
+                    employee.JobId
+                );
+
+            //send lists to view via the viewbag
+            ViewBag.LineManagers = lineManagers;
+            ViewBag.Departments = departments;
+            ViewBag.Jobs = jobs;
+
+            return PartialView(employee);
+        }
+
+        public ActionResult EditEmployee(Employee employee, HttpPostedFileBase profileImage)
+        {
+
+            var url = employee.ProfileImageUrl;
+
+            if (profileImage != null)
+            {
+                var originalFilename = Path.GetFileName(profileImage.FileName);
+                string guid = Guid.NewGuid().ToString().Replace("-", "");
+                string userName = employee.FirstName.ToLower() + "_" + employee.LastName.ToLower();
+                string newFileName = userName + "_" + guid;
+                string newFileNameExt = userName + "_" + guid + Path.GetExtension(profileImage.FileName);
+
+                var x = Server.MapPath(profileImage.FileName);
+
+                //save locally
+                var path = Path.Combine(Server.MapPath("~/Images/Employees/"), newFileNameExt);
+                profileImage.SaveAs(path);
+
+                //save to cloud
+                var cloud = new Helpers.CloudStroage();
+                url = cloud.UploadImage(path, newFileName);
+            }
+
+            employee.ProfileImageUrl = url;
+
+            db.Employees.Attach(employee);
+            db.Entry(employee).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+
+            return RedirectToAction("EmployeeDetails", new { id = employee.EmployeeId });
         }
 
         [HttpGet]
@@ -153,7 +224,7 @@ namespace HRMS.Controllers
             db.EmployeeEmployeeDocumentLinks.Add(link);
             db.SaveChanges();
 
-            return RedirectToAction("");
+            return RedirectToAction("EmployeeDetails", new { id = employee.EmployeeId});
         }
 
 

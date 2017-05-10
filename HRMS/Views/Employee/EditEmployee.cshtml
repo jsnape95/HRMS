@@ -6,7 +6,9 @@
         autoclose: true
     });
 
-    getJobs();
+    var i = @Model.Job.DepartmentId;
+
+    getJobs(i);
 
     $('#departmentDropdown').on('change', function () {
 
@@ -19,8 +21,19 @@
         //$('#addEmployeeForm').validate();
     //});
 
-    function getJobs() {
-        var id = $('#departmentDropdown').val();
+    function getJobs(i) {
+
+        var id = 0;
+        var job = 0;
+
+        if (i == null) {
+            id = $('#departmentDropdown').val();
+        }
+        else {
+            id = i;
+            job = @Model.JobId;
+        }
+        
 
         $.ajax({
             type: "GET",
@@ -35,17 +48,26 @@
 
                 $('#jobList').empty();
                 $.each(data, function (i, item) {
-                    $('#jobList').append($('<option>', { value: data[i].JobId, text: data[i].JobTitle }));
+
+                    if(job != 0 && data[i].JobId == job)
+                    {
+                        $('#jobList').append($('<option>', { value: data[i].JobId, text: data[i].JobTitle, selected: true }));
+                    }
+                    else
+                    {
+                        $('#jobList').append($('<option>', { value: data[i].JobId, text: data[i].JobTitle }));
+                    }
                 });
             }
         });
     }
-    
+
 </script>
 
-@{ 
+@{
     var titles = new List<SelectListItem>();
-    titles.Add(new SelectListItem {
+    titles.Add(new SelectListItem
+    {
         Text = "Mr",
         Value = "Mr"
     });
@@ -73,7 +95,7 @@
 </style>
 
 
-@using (Html.BeginForm("AddEmployee", "Employee", FormMethod.Post, new { id = "addEmployeeForm", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("EditEmployee", "Employee", FormMethod.Post, new { id = "addEmployeeForm", enctype = "multipart/form-data" }))
 {
 
     @Html.AntiForgeryToken()
@@ -150,7 +172,7 @@
         <div class="form-group">
             @Html.LabelFor(x => x.LineManagerId, "Line Manager", new { @class = "col-md-2 control-label" })
             <div class="col-md-9">
-                @Html.DropDownListFor(x => x.LineManagerId, (SelectList)ViewBag.LineManagers, "N/A", new { @class = "form-control", id="lineManagerList"})
+                @Html.DropDownListFor(x => x.LineManagerId, (SelectList)ViewBag.LineManagers, "N/A", new { @class = "form-control", id = "lineManagerList" })
             </div>
         </div>
 
@@ -175,7 +197,8 @@
         <div class="form-group">
             @Html.LabelFor(x => x.ProfileImageUrl, "Profile Image", new { @class = "col-md-2 control-label" })
             <div class="col-md-9">
-                <input type="file" name="profileImage" accept="image/*"/>
+                @Html.TextBoxFor(x => x.ProfileImageUrl, new { type = "file", name = "profileImage" })
+                @Html.ValidationMessageFor(x => x.ProfileImageUrl, "Note: Only select an image if you wish to change the current one", new { @class="text-danger"})
             </div>
         </div>
 
@@ -186,8 +209,12 @@
             </div>
         </div>
 
+        @Html.HiddenFor(x => x.ProfileImageUrl)
+        @Html.HiddenFor(x => x.EmployeeId)
 
     </div>
-    
+
 }
+
+
 

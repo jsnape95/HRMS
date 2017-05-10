@@ -88,33 +88,47 @@
                     startDate = formatDate(start);
                     endDate = formatDate(end);
 
-                    $.ajax({
-                        type: "GET",
-                        url: "/Holiday/RequestHoliday",
-                        data: {
-                            start: startDate,
-                            end: endDate,
-                            provisionalDays: provisionalDays
-                        },
-                        success: function (data) {
-                            if (data.status == 0) {
-                                bootbox.alert("You can not make another holiday request as you currently do not have any provisional days remaining.");
+                    var check = $.fullCalendar.formatDate(start,'yyyy-MM-dd');
+                    var today = $.fullCalendar.formatDate(new Date(),'yyyy-MM-dd');
+
+                    if(check < today)
+                    {
+                        // Previous Day. show message if you want otherwise do nothing.
+                        bootbox.alert("You can not make a holiday request for a past date.");
+                    }
+                    else
+                    {
+                        // Its a right date
+                        $.ajax({
+                            type: "GET",
+                            url: "/Holiday/RequestHoliday",
+                            data: {
+                                start: startDate,
+                                end: endDate,
+                                provisionalDays: provisionalDays
+                            },
+                            success: function (data) {
+                                if (data.status == 0) {
+                                    bootbox.alert("You can not make another holiday request as you currently do not have any provisional days remaining.");
+                                }
+                                else if (data.status == 1) {
+                                    bootbox.alert("The number of days that have been requested are above your provisonal amount remaining. Please try again.");
+                                }
+                                else if (data.status == 2) {
+                                    bootbox.alert("You have already made a holiday request for the chosen date(s). Please try again.");
+                                }
+                                else {
+                                    bootbox.dialog({
+                                        title: "Holiday Request",
+                                        message: data,
+                                        className: "modalMedium"
+                                    });
+                                }
                             }
-                            else if (data.status == 1) {
-                                bootbox.alert("The number of days that have been requested are above your provisonal amount remaining. Please try again.");
-                            }
-                            else if (data.status == 2) {
-                                bootbox.alert("You have already made a holiday request for the chosen date(s). Please try again.");
-                            }
-                            else {
-                                bootbox.dialog({
-                                    title: "Holiday Request",
-                                    message: data,
-                                    className: "modalMedium"
-                                });
-                            }
-                        }
-                    });
+                        });
+                    }
+
+                   
                 },
                 header: {
                     left: '',

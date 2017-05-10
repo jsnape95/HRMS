@@ -234,7 +234,7 @@ namespace HRMS.Controllers
 
             AddTimelineEvent(tEvent.VacancyApplicantLinkId, tEvent.Event, tEvent.Heading, tEvent.Notes, tEvent.DateCreated);
 
-            return RedirectToAction("ApplicantTimeline", new { applicantId = tEvent.VacancyApplicantLinkId });
+            return RedirectToAction("ApplicantTimeline", new { linkId = tEvent.VacancyApplicantLinkId });
         }
 
 

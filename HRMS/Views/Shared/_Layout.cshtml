@@ -48,7 +48,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="@Url.Action("Index", "JobOpportunity")"><i class="fa fa-building"></i> Vacancies</a></li>
-                                <li><a href="@Url.Action("ViewApplicants", "JobOpportunity")"><i class="fa fa-user-plus"></i> Applicants</a></li>
+                                @*<li><a href="@Url.Action("ViewApplicants", "JobOpportunity")"><i class="fa fa-user-plus"></i> Applicants</a></li>*@
                             </ul>
                         </li>
                     }
@@ -62,14 +62,14 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="@Url.Action("Index", "Holiday")"><i class="fa fa-plus"></i> Holiday Request</a></li>
-                            <li><a href="@Url.Action("ViewCalendar", "Holiday")"><i class="fa fa-calendar"></i> View Calander</a></li>
+                            @*<li><a href="@Url.Action("ViewCalendar", "Holiday")"><i class="fa fa-calendar"></i> View Calander</a></li>*@
                         </ul>
                     </li>
 
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
-                            <a href="@Url.Action("Index", "Home")">
+                            <a href="@Url.Action("Settings", "Account")">
                                 <i class="fa fa-cog"></i> <span>Settings</span>
                             </a>
                         </li>

@@ -43,6 +43,13 @@ namespace HRMS.Models
         [Required]
         public int HolidayEntitlement { get; set; }
 
+        public string Fullname
+        {
+            get
+            {
+                return string.Format("{0} {1}", FirstName, LastName);
+            }
+        }
 
         public virtual Job Job { get; set; }
 

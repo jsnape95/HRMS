@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using HRMS.Models;
 using HRMS.Helpers;
+using System.Web.Configuration;
 
 namespace HRMS.Controllers
 {
@@ -182,7 +183,10 @@ namespace HRMS.Controllers
                     if(!HttpContext.IsDebuggingEnabled)
                     {
                         var email = new EmailDistribution();
-                        email.SendEmail(model.Email, "Welcome!");
+
+                        var html = "<!DOCTYPE html> <html>   <head>     <meta name='viewport' content='width=device-width'>     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>     <title>Simple Transactional Email</title>   </head>   <body class='' style='background-color:#f6f6f6;font-family:sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.4;margin:0;padding:0;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;'>     <table border='0' cellpadding='0' cellspacing='0' class='body' style='border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;background-color:#f6f6f6;width:100%;'>       <tr>         <td style='font-family:sans-serif;font-size:14px;vertical-align:top;'>&nbsp;</td>         <td class='container' style='font-family:sans-serif;font-size:14px;vertical-align:top;display:block;max-width:580px;padding:10px;width:580px;Margin:0 auto !important;'>           <div class='content' style='box-sizing:border-box;display:block;Margin:0 auto;max-width:580px;padding:10px;'>             <!-- START CENTERED WHITE CONTAINER -->             <span class='preheader' style='color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;visibility:hidden;width:0;'>This is preheader text. Some clients will show this text as a preview.</span>             <table class='main' style='border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;background:#fff;border-radius:3px;width:100%;'>               <!-- START MAIN CONTENT AREA -->               <tr>                 <td class='wrapper' style='font-family:sans-serif;font-size:14px;vertical-align:top;box-sizing:border-box;'>                   <table border='0' cellpadding='0' cellspacing='0' style='border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;'> 					<tr> 						<td align='left' bgcolor='#455a64' style='padding: 40px 0 30px 30px; color: #ffffff; font-family: Arial, sans-serif; font-size: 24px;'> 							<h2>Human Resource Management System</h2> 						</td> 					</tr>                     <tr>                       <td style='font-family:sans-serif;font-size:14px;vertical-align:top; padding: 20px'>                         <p style='color: #153643; font-family: Arial, sans-serif; font-size: 24px;'><b>Welcome!</b></p>                         <p style='font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;Margin-bottom:15px;'> 						Welcome, to the Human Resource Management System. Thanks for joining, please click <a href='http://176.74.17.181/' target='_blank'>here</a> to access. 						</p>                       </td>                     </tr>                   </table>                 </td>               </tr>               <!-- END MAIN CONTENT AREA -->             </table>             <!-- START FOOTER -->             <div class='footer' style='clear:both;text-align:center;width:100%;'>               <table border='0' cellpadding='0' cellspacing='0' style='border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;width:100%;'>                 <tr> 							<td bgcolor='#37474f' style='padding: 30px 30px 30px 30px;'> 								<table border='0' cellpadding='0' cellspacing='0' width='100%'> 									<tr> 										<td style='color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;'> 											&reg; James Snape, Loughborough University 2017<br/> 										</td> 									</tr> 								</table> 							</td> 						 </tr>               </table>             </div>             <!-- END FOOTER -->             <!-- END CENTERED WHITE CONTAINER -->           </div>         </td>         <td style='font-family:sans-serif;font-size:14px;vertical-align:top;'>&nbsp;</td>       </tr>     </table>   </body> </html>";
+
+                        email.SendEmail(model.Email, "Welcome!", "Welcome to the HRMS.", html);
                     }
 
                     return RedirectToAction("Index", "Home");
@@ -429,15 +433,58 @@ namespace HRMS.Controllers
         [HttpGet]
         public ActionResult Settings()
         {
-            return View();
+            var users = db.Users.ToList();
+
+            return View(users);
         }
 
-        public async Task<ActionResult> UpgradeToAdmin(string userId)
+        public ActionResult ChangeUserRole(string id, bool promote)
         {
-            await UserManager.AddToRoleAsync(userId, "Admin");
+            if (promote)
+            {
+                UserManager.RemoveFromRole(id, "Standard");
+                UserManager.AddToRole(id, "Admin");
+            }
+            else
+            {
+                UserManager.RemoveFromRole(id, "Admin");
+                UserManager.AddToRole(id, "Standard");
+            }
+
+            db.SaveChanges();
+            
             return RedirectToAction("Settings");
             
         }
+
+        [HttpGet]
+        public PartialViewResult AssociateEmployee(string id)
+        {
+            var user = db.Users.FirstOrDefault(x => x.Id == id);
+            var employees = db.Employees.Where(x => !db.Users.Select(y => y.EmployeeId).Contains( x.EmployeeId)).ToList();
+
+            var listEmployees = new SelectList(
+                    employees.OrderBy(x => x.FirstName),
+                    "EmployeeId",
+                    "Fullname"
+                );
+
+            ViewBag.Employees = listEmployees;
+
+            return PartialView(user);
+        }
+
+        [HttpPost]
+        public ActionResult AssociateEmployee(ApplicationUser user)
+        {
+            var dbUser = db.Users.FirstOrDefault(x => x.Id == user.Id);
+            dbUser.EmployeeId = user.EmployeeId;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Settings");
+        }
+
 
         protected override void Dispose(bool disposing)
         {

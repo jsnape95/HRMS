@@ -1,0 +1,27 @@
+﻿@model HRMS.Models.ApplicationUser
+
+@{ 
+}
+
+@using (Html.BeginForm("AssociateEmployee", "Account", FormMethod.Post))
+{
+    <div class="form-horizontal">
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.EmployeeId, "Employee", new { @class = "col-md-2 control-label" })
+            <div class="col-md-9">
+                @Html.DropDownListFor(x => x.EmployeeId, (SelectList)ViewBag.Employees, new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default pull-right margin-10-left" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success pull-right margin-10-left" id="submitAddEmp">Save</button>
+            </div>
+        </div>
+
+        @Html.HiddenFor(x => x.Id)
+
+    </div>
+}
